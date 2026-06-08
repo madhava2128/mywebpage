@@ -1,26 +1,298 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #05080f;
+  --foreground: #e0f4ff;
+  --card: #0c1525;
+  --card-foreground: #e0f4ff;
+  --primary: #00b4d8;
+  --primary-foreground: #ffffff;
+  --secondary: #091220;
+  --secondary-foreground: #7a9ec0;
+  --muted: #091828;
+  --muted-foreground: #4a6580;
+  --accent: #00b4d8;
+  --accent-foreground: #ffffff;
+  --border: rgba(0, 180, 216, 0.15);
+  --input: #091828;
+  --ring: #00b4d8;
+  --radius: 0.75rem;
+
+  /* Portfolio custom colors — Deep Ocean palette */
+  --cyan:        #00b4d8;
+  --cyan-bright: #00e5ff;
+  --cyan-pale:   #90e0ef;
+  --cyan-deep:   #0077b6;
+  --cyan-glow:   rgba(0, 180, 216, 0.30);
+  --mint:        #00ffa3;
+  --amber:       #f59e0b;
+  --text-primary:   #e0f4ff;
+  --text-secondary: #7a9ec0;
+  --text-muted:     #4a6580;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-family: var(--font-inter), system-ui, sans-serif;
+    background: transparent;
+    color: var(--foreground);
+  }
+
+  body {
+    background: transparent;
+    color: var(--foreground);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--cyan-glow);
+    color: var(--cyan-bright);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--cyan);
+    border-radius: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Utilities ─────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #00e5ff 0%, #00b4d8 45%, #00ffa3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-border {
+  border: 1px solid var(--border);
+  box-shadow: 0 0 0 1px rgba(0, 180, 216, 0.05),
+              inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.glass {
+  background: rgba(9, 18, 37, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── Animations ────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 180, 216, 0.3); }
+  50%       { box-shadow: 0 0 40px rgba(0, 180, 216, 0.6); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.7s ease both; }
+.animate-fade-in    { animation: fadeIn   0.7s ease both; }
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* ── Navbar ────────────────────────────────────── */
+.nav-link {
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: color 0.2s;
+  padding: 0.25rem 0;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--cyan-bright));
+  border-radius: 1px;
+  transition: width 0.25s ease;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ── Section ───────────────────────────────────── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan-bright);
+  margin-bottom: 0.75rem;
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--cyan);
+  border-radius: 1px;
+}
+
+/* ── Cards ─────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 180, 216, 0.12);
+  border-color: rgba(0, 180, 216, 0.35) !important;
+}
+
+/* ── Skill badge ───────────────────────────────── */
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  background: rgba(0, 180, 216, 0.08);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  color: #90e0ef;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.skill-badge:hover {
+  background: rgba(0, 180, 216, 0.18);
+  border-color: rgba(0, 180, 216, 0.45);
+  transform: scale(1.04);
+}
+
+/* ── Timeline ──────────────────────────────────── */
+.timeline-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--cyan), transparent);
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+  border: 2px solid var(--background);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.25);
+  flex-shrink: 0;
+}
+
+/* ── Button ────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--cyan-deep) 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(0, 180, 216, 0.35);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 180, 216, 0.5);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--cyan-bright);
+  border: 1px solid rgba(0, 180, 216, 0.4);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.btn-outline:hover {
+  background: rgba(0, 180, 216, 0.1);
+  border-color: rgba(0, 180, 216, 0.6);
+  transform: translateY(-2px);
 }
