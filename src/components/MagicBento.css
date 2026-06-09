@@ -2,11 +2,11 @@
   --hue: 195;
   --sat: 100%;
   --white: hsl(0, 0%, 100%);
-  --cyan-primary: rgba(0, 180, 216, 1);
-  --cyan-glow: rgba(0, 180, 216, 0.2);
-  --cyan-border: rgba(0, 180, 216, 0.8);
-  --border-color: #162636;
-  --background-dark: #0a1520;
+  --accent-primary: rgba(249, 115, 22, 1);
+  --accent-glow: rgba(249, 115, 22, 0.2);
+  --accent-border: rgba(249, 115, 22, 0.8);
+  --border-color: #292524;
+  --background-dark: #141210;
 }
 
 .card-grid {
@@ -150,8 +150,8 @@
   padding: 6px;
   background: radial-gradient(
     var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-    rgba(0, 180, 216, calc(var(--glow-intensity) * 0.8)) 0%,
-    rgba(0, 180, 216, calc(var(--glow-intensity) * 0.4)) 30%,
+    rgba(249, 115, 22, calc(var(--glow-intensity) * 0.8)) 0%,
+    rgba(249, 115, 22, calc(var(--glow-intensity) * 0.4)) 30%,
     transparent 60%
   );
   border-radius: inherit;
@@ -176,7 +176,7 @@
 .magic-bento-card--border-glow:hover {
   box-shadow:
     0 4px 20px rgba(5, 15, 30, 0.4),
-    0 0 30px var(--cyan-glow);
+    0 0 30px var(--accent-glow);
 }
 
 .particle-container {
@@ -191,7 +191,7 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: rgba(0, 180, 216, 0.2);
+  background: rgba(249, 115, 22, 0.2);
   border-radius: 50%;
   z-index: -1;
 }
@@ -199,7 +199,7 @@
 .particle-container:hover {
   box-shadow:
     0 4px 20px rgba(5, 15, 30, 0.2),
-    0 0 30px var(--cyan-glow);
+    0 0 30px var(--accent-glow);
 }
 
 /* Global spotlight styles */

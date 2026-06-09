@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+"use client";
+
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import './TrueFocus.css';
 
@@ -6,6 +8,7 @@ interface TrueFocusProps {
   sentence?: string;
   separator?: string;
   manualMode?: boolean;
+  blurAmount?: number;
   borderColor?: string;
   glowColor?: string;
   animationDuration?: number;
@@ -23,111 +26,94 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
   sentence = 'True Focus',
   separator = ' ',
   manualMode = false,
-  borderColor = '#00e5ff',
-  glowColor = 'rgba(0, 229, 255, 0.35)',
+  blurAmount = 5,
+  borderColor = 'green',
+  glowColor = 'rgba(0, 255, 0, 0.6)',
   animationDuration = 0.5,
-  pauseBetweenAnimations = 1.2,
+  pauseBetweenAnimations = 1
 }) => {
   const words = sentence.split(separator);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [focusRect, setFocusRect] = useState<FocusRect | null>(null);
+  const [lastActiveIndex, setLastActiveIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const rafRef = useRef<number>(0);
+  const [focusRect, setFocusRect] = useState<FocusRect>({ x: 0, y: 0, width: 0, height: 0 });
 
-  /** Measure active word position after the browser has painted */
-  const measure = useCallback((idx: number) => {
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      const el = wordRefs.current[idx];
-      const container = containerRef.current;
-      if (!el || !container) return;
-      const pRect = container.getBoundingClientRect();
-      const wRect = el.getBoundingClientRect();
-      setFocusRect({
-        x: wRect.left - pRect.left,
-        y: wRect.top - pRect.top,
-        width: wRect.width,
-        height: wRect.height,
-      });
-    });
-  }, []);
-
-  /* Measure whenever the active word changes */
   useEffect(() => {
-    measure(currentIndex);
-  }, [currentIndex, measure]);
+    if (!manualMode) {
+      const interval = setInterval(() => {
+        setCurrentIndex(prev => (prev + 1) % words.length);
+      }, (animationDuration + pauseBetweenAnimations) * 1000);
 
-  /* Re-measure on resize */
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const ro = new ResizeObserver(() => measure(currentIndex));
-    ro.observe(document.body);
-    return () => {
-      ro.disconnect();
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, [currentIndex, measure]);
-
-  /* Auto-cycle */
-  useEffect(() => {
-    if (manualMode) return;
-    const ms = (animationDuration + pauseBetweenAnimations) * 1000;
-    const id = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % words.length);
-    }, ms);
-    return () => clearInterval(id);
+      return () => clearInterval(interval);
+    }
   }, [manualMode, animationDuration, pauseBetweenAnimations, words.length]);
+
+  useEffect(() => {
+    if (currentIndex === null || currentIndex === -1) return;
+    if (!wordRefs.current[currentIndex] || !containerRef.current) return;
+
+    const parentRect = containerRef.current.getBoundingClientRect();
+    const activeRect = wordRefs.current[currentIndex]!.getBoundingClientRect();
+
+    setFocusRect({
+      x: activeRect.left - parentRect.left,
+      y: activeRect.top - parentRect.top,
+      width: activeRect.width,
+      height: activeRect.height
+    });
+  }, [currentIndex, words.length]);
+
+  const handleMouseEnter = (index: number) => {
+    if (manualMode) {
+      setLastActiveIndex(index);
+      setCurrentIndex(index);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (manualMode) {
+      setCurrentIndex(lastActiveIndex ?? 0);
+    }
+  };
 
   return (
     <div className="focus-container" ref={containerRef}>
       {words.map((word, index) => {
         const isActive = index === currentIndex;
         return (
-          <React.Fragment key={index}>
-            <span
-              ref={el => { wordRefs.current[index] = el; }}
-              className="focus-word"
-              style={{
-                opacity: isActive ? 1 : 0.25,
-                filter: isActive ? 'blur(0px)' : 'blur(3px)',
-                transition: `opacity ${animationDuration}s ease, filter ${animationDuration}s ease`,
-              }}
-              onMouseEnter={() => { if (manualMode) setCurrentIndex(index); }}
-            >
-              {word}
-            </span>
-            {index < words.length - 1 && (
-              <span className="focus-separator">·</span>
-            )}
-          </React.Fragment>
+          <span
+            key={index}
+            ref={el => {
+              if (el) wordRefs.current[index] = el;
+            }}
+            className={`focus-word ${manualMode ? 'manual' : ''} ${isActive && !manualMode ? 'active' : ''}`}
+            style={{
+              filter: manualMode ? (isActive ? `blur(0px)` : `blur(${blurAmount}px)`) : (isActive ? `blur(0px)` : `blur(${blurAmount}px)`),
+              transition: `filter ${animationDuration}s ease`,
+              // CSS custom properties
+              ['--border-color' as any]: borderColor,
+              ['--glow-color' as any]: glowColor
+            } as React.CSSProperties}
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={handleMouseLeave}
+          >
+            {word}
+          </span>
         );
       })}
 
-      {focusRect && (
-        <motion.div
-          className="focus-frame"
-          initial={false}
-          animate={{
-            x: focusRect.x,
-            y: focusRect.y,
-            width: focusRect.width,
-            height: focusRect.height,
-          }}
-          transition={{ duration: animationDuration, ease: 'easeInOut' }}
-          style={{
-            // @ts-expect-error custom CSS vars
-            '--border-color': borderColor,
-            '--glow-color': glowColor,
-          }}
-        >
-          <span className="corner top-left" />
-          <span className="corner top-right" />
-          <span className="corner bottom-left" />
-          <span className="corner bottom-right" />
-        </motion.div>
-      )}
+      <motion.div
+        className="focus-frame"
+        animate={{ x: focusRect.x, y: focusRect.y, width: focusRect.width, height: focusRect.height, opacity: currentIndex >= 0 ? 1 : 0 }}
+        transition={{ duration: animationDuration }}
+        style={{ ['--border-color' as any]: borderColor, ['--glow-color' as any]: glowColor } as React.CSSProperties}
+      >
+        <span className="corner top-left" />
+        <span className="corner top-right" />
+        <span className="corner bottom-left" />
+        <span className="corner bottom-right" />
+      </motion.div>
     </div>
   );
 };

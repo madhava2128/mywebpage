@@ -261,9 +261,9 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
     const shell = shellRef.current;
     if (!shell) return;
 
-    const pointerMoveHandler = handlePointerMove as any;
-    const pointerEnterHandler = handlePointerEnter as any;
-    const pointerLeaveHandler = handlePointerLeave as any;
+    const pointerMoveHandler = handlePointerMove as EventListener;
+    const pointerEnterHandler = handlePointerEnter as EventListener;
+    const pointerLeaveHandler = handlePointerLeave as EventListener;
     const deviceOrientationHandler = handleDeviceOrientation;
 
     shell.addEventListener('pointerenter', pointerEnterHandler);
@@ -272,9 +272,14 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
 
     const handleClick = () => {
       if (!enableMobileTilt || typeof window === 'undefined' || window.location.protocol !== 'https:') return;
-      const anyMotion = (window as any).DeviceMotionEvent;
-      if (anyMotion && typeof anyMotion.requestPermission === 'function') {
-        anyMotion
+      const deviceMotionEvent = (window as Window & {
+        DeviceMotionEvent?: {
+          requestPermission?: () => Promise<string>;
+        };
+      }).DeviceMotionEvent;
+
+      if (deviceMotionEvent && typeof deviceMotionEvent.requestPermission === 'function') {
+        deviceMotionEvent
           .requestPermission()
           .then((state: string) => {
             if (state === 'granted') {
@@ -345,8 +350,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
               src={avatarUrl}
               alt={`${name || 'User'} avatar`}
               loading="lazy"
-              onError={(e: any) => {
-                const t = e.target;
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const t = e.target as HTMLImageElement;
                 t.style.display = 'none';
               }}
             />
@@ -359,8 +364,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                       src={miniAvatarUrl || avatarUrl}
                       alt={`${name || 'User'} mini avatar`}
                       loading="lazy"
-                      onError={(e: any) => {
-                        const t = e.target;
+                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                        const t = e.target as HTMLImageElement;
                         t.style.opacity = '0.5';
                         t.src = avatarUrl;
                       }}

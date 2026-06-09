@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import './PillNav.css';
@@ -45,7 +46,6 @@ const PillNav: React.FC<PillNavProps> = ({
   const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const tlRefs = useRef<(gsap.core.Timeline | null)[]>([]);
   const activeTweenRefs = useRef<(gsap.core.Tween | null)[]>([]);
-  const logoImgRef = useRef<HTMLImageElement | null>(null);
   const logoTweenRef = useRef<gsap.core.Tween | null>(null);
   const hamburgerRef = useRef<HTMLButtonElement | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
@@ -165,11 +165,11 @@ const PillNav: React.FC<PillNavProps> = ({
   };
 
   const handleLogoEnter = () => {
-    const img = logoImgRef.current;
-    if (!img) return;
+    const logoEl = logoRef.current;
+    if (!logoEl) return;
     logoTweenRef.current?.kill();
-    gsap.set(img, { rotate: 0 });
-    logoTweenRef.current = gsap.to(img, {
+    gsap.set(logoEl, { rotate: 0 });
+    logoTweenRef.current = gsap.to(logoEl, {
       rotate: 360,
       duration: 0.2,
       ease,
@@ -262,7 +262,7 @@ const PillNav: React.FC<PillNavProps> = ({
             role="menuitem"
             ref={logoRef}
           >
-            <img src={logo} alt={logoAlt} ref={logoImgRef} />
+            <Image src={logo} alt={logoAlt} width={32} height={32} />
           </Link>
         ) : (
           <a
@@ -272,7 +272,7 @@ const PillNav: React.FC<PillNavProps> = ({
             onMouseEnter={handleLogoEnter}
             ref={logoRef}
           >
-            <img src={logo} alt={logoAlt} ref={logoImgRef} />
+            <Image src={logo} alt={logoAlt} width={32} height={32} />
           </a>
         )}
 
