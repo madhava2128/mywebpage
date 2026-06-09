@@ -618,10 +618,18 @@ function Projects() {
                 <span style={{ flexShrink: 0, fontSize: '0.72rem', fontWeight: 600, padding: '0.2rem 0.55rem', borderRadius: 999, border: `1px solid ${p.tagColor}33`, background: `${p.tagColor}15`, color: p.tagColor }}>{p.tag}</span>
               </div>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.7, flex: 1 }}>{p.desc}</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{p.period}</span>
                 {p.link && (
-                  <a href={p.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.78rem', color: 'var(--accent-bright)', textDecoration: 'none', fontWeight: 500 }}>View →</a>
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link-btn"
+                  >
+                    View Project
+                    <span aria-hidden="true">→</span>
+                  </a>
                 )}
               </div>
             </SpotlightCard>
