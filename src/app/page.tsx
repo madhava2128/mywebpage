@@ -105,7 +105,7 @@ const PROJECTS = [
     tag: 'Production',
     tagColor: ACCENTS.success,
     desc: 'Designed and deployed a custom enterprise app automating multi-step workflows using Flow Designer and Business Rules on the ServiceNow platform.',
-    period: '2024',
+    period: '2026',
     link: undefined,
   },
   {
