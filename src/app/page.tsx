@@ -101,10 +101,10 @@ const CERTIFICATIONS = [
 
 const PROJECTS = [
   {
-    title: 'ServiceNow Enterprise App',
+    title: 'ServiceNow Application (Budget Tracker)',
     tag: 'Production',
     tagColor: ACCENTS.success,
-    desc: 'Designed and deployed a custom enterprise app automating multi-step workflows using Flow Designer and Business Rules on the ServiceNow platform.',
+    desc: 'Developed a ServiceNow application to track monthly income and expenses, manage budget limits, and monitor spendingthrough automated workflows, reports, and dashboards. Implemented custom tables, Business Rules, Flow Designerautomations, and KPI-based financial insights.',
     period: '2026',
     link: undefined,
   },
@@ -265,7 +265,7 @@ function Hero() {
         <div className="animate-slide-up button-group delay-300">
           <a href="#projects" className="btn btn-primary">View Projects</a>
           <a href="#contact" className="btn btn-secondary">Get in Touch</a>
-          <a href={'https://drive.google.com/file/d/1G5C8FuOYQnaxtQXMPjzh47pWfebZbdUc/view?usp=sharing'} className="btn btn-secondary">View Resume</a>
+          <a href={'https://drive.google.com/file/d/1ijXMTV8ZzStCRxTJQtdkMI01fvxIywBq/view?usp=sharing'} className="btn btn-secondary">View Resume</a>
         </div>
 
         <div className="hero-scroll-hint" aria-hidden="true">
