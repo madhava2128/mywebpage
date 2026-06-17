@@ -136,7 +136,7 @@ const PROJECTS = [
     title: 'NEP 2020 Timetable Optimization System',
     tag: 'Live',
     tagColor: ACCENTS.product,
-    desc: 'Developed an AI application that generates rich landmark descriptions using the Gemini API, An advanced constraint-satisfaction based timetable generation system built in accordance with the National Education Policy (NEP) 2020 guidelines. This tool automates the scheduling of university courses, labs, and faculty across available infrastructure while adhering to strict operational constraints. visual recognition use cases for travellers and accessibility tools.',
+    desc: 'Built a Optimization System using React, FastAPI, and Google OR-Tools to automate course, faculty, and lab scheduling.Implemented constraint-based optimization and timetable visualization for conflict-free schedule generation across multipleacademic programs.',
     period: '2025',
     link: 'https://github.com/madhava2128/Nep-Timetable-Optimization',
   },
