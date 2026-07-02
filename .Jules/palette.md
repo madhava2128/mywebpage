@@ -1,0 +1,1 @@
+## 2024-05-15 - Add aria-expanded to mobile menu button\n**Learning:** In the PillNav component, the mobile menu toggle button lacks the `aria-expanded` attribute, which is crucial for screen readers to convey the current state (open/closed) of the mobile menu.\n**Action:** Always add `aria-expanded={isOpen}` to menu toggle buttons.
