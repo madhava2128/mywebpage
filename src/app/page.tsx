@@ -265,7 +265,7 @@ function Hero() {
         <div className="animate-slide-up button-group delay-300">
           <a href="#projects" className="btn btn-primary">View Projects</a>
           <a href="#contact" className="btn btn-secondary">Get in Touch</a>
-          <a href={'https://drive.google.com/file/d/1ijXMTV8ZzStCRxTJQtdkMI01fvxIywBq/view?usp=sharing'} className="btn btn-secondary">View Resume</a>
+          <a href={'https://drive.google.com/file/d/1ijXMTV8ZzStCRxTJQtdkMI01fvxIywBq/view?usp=sharing'} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">View Resume</a>
         </div>
 
         <div className="hero-scroll-hint" aria-hidden="true">
